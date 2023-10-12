@@ -1,0 +1,11 @@
+http://:8080 {
+  root * web
+  reverse_proxy localhost:8081
+  handle_errors {
+    @502 expression `{err.status_code} == 502`
+    handle @502 {
+      file_server
+    }
+    respond "{err.status_code} {err.status_text}" {err.status_code}
+  }
+}
